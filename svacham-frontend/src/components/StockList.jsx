@@ -28,9 +28,62 @@ function StockList(){
 
   const handleAdd=()=>{ setEditing(null); setShowForm(true);}
   const handleEdit=(r)=>{ setEditing(r); setShowForm(true);}
-  const handleView=async(r)=>{ setLoading(true); try{ const fresh = await stockAPI.getStockBySeq(r.seq); setSelected(fresh || r);}catch(err){ console.error(err); setSelected(r);}finally{ setLoading(false); setShowView(true);} };
-  const handleDelete=async(seq)=>{ if(!window.confirm('Delete this record?')) return; try{ await stockAPI.deleteStockBySeq(seq); setSuccess('Deleted'); fetchItems(); fetchSummary(); setTimeout(()=>setSuccess(''),3000);}catch(err){ console.error(err); setError('Delete failed'); }};
-  const handleSubmit=async(form,seq)=>{ try{ if(seq) await stockAPI.updateStockBySeq(seq,form); else await stockAPI.createStock(form); fetchItems(); fetchSummary(); setTimeout(()=>setSuccess('Saved'),2000);}catch(err){ console.error(err); setError('Save failed'); }};
+  const handleView = async (r) => {
+    setLoading(true);
+    try {
+      // prefer id-based lookup, fall back to seq
+      const fresh = r?.id ? await stockAPI.getStockById(r.id) : (r?.seq ? await stockAPI.getStockBySeq(r.seq) : null);
+      setSelected(fresh || r);
+    } catch (err) {
+      console.error(err);
+      setSelected(r);
+    } finally {
+      setLoading(false);
+      setShowView(true);
+    }
+  };
+
+  const handleDelete = async (idOrSeq) => {
+    if (!window.confirm('Delete this record?')) return;
+    try {
+      // prefer id-based delete, fall back to seq
+      try {
+        await stockAPI.deleteStock(idOrSeq);
+      } catch (err) {
+        console.warn('delete by id failed, trying delete by seq', err);
+        await stockAPI.deleteStockBySeq(idOrSeq);
+      }
+      setSuccess('Deleted');
+      fetchItems();
+      fetchSummary();
+      setTimeout(() => setSuccess(''), 3000);
+    } catch (err) {
+      console.error(err);
+      setError(typeof err === 'string' ? err : (err?.message || 'Delete failed'));
+    }
+  };
+
+  const handleSubmit = async (form, idOrSeq) => {
+    try {
+      if (idOrSeq) {
+        // prefer id-based update, fall back to seq
+        try {
+          await stockAPI.updateStock(idOrSeq, form);
+        } catch (err) {
+          console.warn('update by id failed, trying update by seq', err);
+          await stockAPI.updateStockBySeq(idOrSeq, form);
+        }
+      } else {
+        await stockAPI.createStock(form);
+      }
+      fetchItems();
+      fetchSummary();
+      setTimeout(() => setSuccess('Saved'), 2000);
+    } catch (err) {
+      console.error(err);
+      setError(typeof err === 'string' ? err : (err?.message || 'Save failed'));
+    }
+  };
 
   const handleSort=async(by)=>{
     setLoading(true); setError('');
@@ -70,7 +123,7 @@ function StockList(){
       <div className="table-wrap">{loading? <div className="loading">Loading...</div> : (
         <table className="stock-table"><thead><tr><th>Seq</th><th>Item</th><th>Quality</th><th>Category</th><th>Unit</th><th>Total</th><th>Used</th><th>Remaining</th><th>Purchased</th><th>Selling</th><th>Added</th><th>Status</th><th>Actions</th></tr></thead>
         <tbody>{filtered.map(r=> (
-          <tr key={r.seq || r.id}><td>{r.seq || r.id}</td><td>{r.itemName}</td><td>{r.quality}</td><td>{r.itemCategory}</td><td>{r.stockUnit}</td><td>{r.totalStock}</td><td>{r.usedStock}</td><td>{r.remainingStock}</td><td>{fmt(r.purchasedPricePerUnit)}</td><td>{fmt(r.sellingPricePerUnit)}</td><td>{fmtDate(r.stockAddedDate)}</td><td><span className={`status ${r.status}`}>{r.status}</span></td><td className="actions"><button className="act view" onClick={()=>handleView(r)}>👁️ View</button><button className="act edit" onClick={()=>handleEdit(r)}>✏️ Edit</button><button className="act del" onClick={()=>handleDelete(r.seq || r.id)}>🗑️ Delete</button></td></tr>
+          <tr key={r.id || r.seq}><td>{r.id || r.seq}</td><td>{r.itemName}</td><td>{r.quality}</td><td>{r.itemCategory}</td><td>{r.stockUnit}</td><td>{r.totalStock}</td><td>{r.usedStock}</td><td>{r.remainingStock}</td><td>{fmt(r.purchasedPricePerUnit)}</td><td>{fmt(r.sellingPricePerUnit)}</td><td>{fmtDate(r.stockAddedDate)}</td><td><span className={`status ${r.status}`}>{r.status}</span></td><td className="actions"><button className="act view" onClick={()=>handleView(r)}>👁️ View</button><button className="act edit" onClick={()=>handleEdit(r)}>✏️ Edit</button><button className="act del" onClick={()=>handleDelete(r.id || r.seq)}>🗑️ Delete</button></td></tr>
         ))}</tbody></table>)}</div>
 
       <StockFormModal isOpen={showForm} onClose={()=>setShowForm(false)} onSubmit={handleSubmit} stockData={editing} />

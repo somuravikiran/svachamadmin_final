@@ -65,7 +65,7 @@ function StockFormModal({ isOpen, onClose, onSubmit, stockData = null }){
         stockAddedDate: form.stockAddedDate,
         status: form.status,
         notes: form.notes
-      }, stockData?.seq);
+      }, stockData?.id || stockData?.seq || stockData?._id);
       onClose();
     }catch(err){ console.error(err); }
     finally{ setLoading(false); }
