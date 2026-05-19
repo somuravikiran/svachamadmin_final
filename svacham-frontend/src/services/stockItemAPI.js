@@ -21,6 +21,17 @@ const stockItemAPI = {
     }
   },
 
+  // get by internal id
+  getStockItemById: async (id) => {
+    try {
+      const res = await axios.get(`${API_BASE_URL}/${id}`);
+      return res.data;
+    } catch (err) {
+      throw err.response?.data || err.message;
+    }
+  },
+
+  // endpoints using sequence number instead of internal id
   getStockItemBySeq: async (seq) => {
     try {
       const res = await axios.get(`${API_BASE_URL}/seq/${seq}`);
@@ -30,9 +41,29 @@ const stockItemAPI = {
     }
   },
 
+  // update by internal id
+  updateStockItem: async (id, data) => {
+    try {
+      const res = await axios.put(`${API_BASE_URL}/${id}`, data);
+      return res.data;
+    } catch (err) {
+      throw err.response?.data || err.message;
+    }
+  },
+
   updateStockItemBySeq: async (seq, data) => {
     try {
       const res = await axios.put(`${API_BASE_URL}/seq/${seq}`, data);
+      return res.data;
+    } catch (err) {
+      throw err.response?.data || err.message;
+    }
+  },
+
+  // delete by internal id
+  deleteStockItem: async (id) => {
+    try {
+      const res = await axios.delete(`${API_BASE_URL}/${id}`);
       return res.data;
     } catch (err) {
       throw err.response?.data || err.message;
