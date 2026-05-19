@@ -53,7 +53,7 @@ function SpendingFormModal({ isOpen, onClose, onSubmit, spendingData = null }){
         vendorName: form.vendorName,
         paymentMode: form.paymentMode,
         status: form.status
-      }, spendingData?.seq || spendingData?.id || spendingData?._id);
+      }, spendingData?.id || spendingData?.seq || spendingData?._id);
       onClose();
     }catch(err){ console.error(err); }
     finally{ setLoading(false); }

@@ -31,7 +31,8 @@ function SpendingList(){
   const handleView = async (r) => {
     setLoading(true);
     try {
-      const fresh = r?.seq ? await spendingAPI.getSpendingBySeq(r.seq) : (r?.id ? await spendingAPI.getSpendingById(r.id) : null);
+      // prefer id-based lookup, fall back to seq
+      const fresh = r?.id ? await spendingAPI.getSpendingById(r.id) : (r?.seq ? await spendingAPI.getSpendingBySeq(r.seq) : null);
       setSelected(fresh || r);
     } catch (err) {
       console.error(err);
@@ -42,15 +43,15 @@ function SpendingList(){
     }
   };
 
-  const handleDelete = async (seqOrId) => {
+  const handleDelete = async (idOrSeq) => {
     if (!window.confirm('Delete this record?')) return;
     try {
-      // try seq endpoint first, fall back to id endpoint
+      // prefer id-based delete, fall back to seq endpoint
       try {
-        await spendingAPI.deleteSpendingBySeq(seqOrId);
+        await spendingAPI.deleteSpending(idOrSeq);
       } catch (err) {
-        console.warn('delete by seq failed, trying delete by id', err);
-        await spendingAPI.deleteSpending(seqOrId);
+        console.warn('delete by id failed, trying delete by seq', err);
+        await spendingAPI.deleteSpendingBySeq(idOrSeq);
       }
       setSuccess('Deleted');
       fetchItems();
@@ -62,15 +63,15 @@ function SpendingList(){
     }
   };
 
-  const handleSubmit = async (form, seqOrId) => {
+  const handleSubmit = async (form, idOrSeq) => {
     try {
-      if (seqOrId) {
-        // try updating by seq first, then by id
+      if (idOrSeq) {
+        // prefer id-based update, fall back to seq
         try {
-          await spendingAPI.updateSpendingBySeq(seqOrId, form);
+          await spendingAPI.updateSpending(idOrSeq, form);
         } catch (err) {
-          console.warn('update by seq failed, trying update by id', err);
-          await spendingAPI.updateSpending(seqOrId, form);
+          console.warn('update by id failed, trying update by seq', err);
+          await spendingAPI.updateSpendingBySeq(idOrSeq, form);
         }
       } else {
         await spendingAPI.createSpending(form);
@@ -122,7 +123,7 @@ function SpendingList(){
       <div className="table-wrap">{loading? <div className="loading">Loading...</div> : (
         <table className="spending-table"><thead><tr><th>Seq</th><th>Item</th><th>Category</th><th>Vendor</th><th>Spent Date</th><th>Amount</th><th>Payment Mode</th><th>Status</th><th>Actions</th></tr></thead>
         <tbody>{filtered.map(r=> (
-          <tr key={r.seq || r.id}><td>{r.seq || r.id}</td><td>{r.itemName}</td><td>{r.itemCategory}</td><td>{r.vendorName}</td><td>{fmtDate(r.spentDate)}</td><td>{fmt(r.amt)}</td><td>{r.paymentMode}</td><td><span className={`status ${r.status}`}>{r.status}</span></td><td className="actions"><button className="act view" onClick={()=>handleView(r)}>👁️ View</button><button className="act edit" onClick={()=>handleEdit(r)}>✏️ Edit</button><button className="act del" onClick={()=>handleDelete(r.seq || r.id)}>🗑️ Delete</button></td></tr>
+          <tr key={r.seq || r.id}><td>{r.seq || r.id}</td><td>{r.itemName}</td><td>{r.itemCategory}</td><td>{r.vendorName}</td><td>{fmtDate(r.spentDate)}</td><td>{fmt(r.amt)}</td><td>{r.paymentMode}</td><td><span className={`status ${r.status}`}>{r.status}</span></td><td className="actions"><button className="act view" onClick={()=>handleView(r)}>👁️ View</button><button className="act edit" onClick={()=>handleEdit(r)}>✏️ Edit</button><button className="act del" onClick={()=>handleDelete(r.id || r.seq)}>🗑️ Delete</button></td></tr>
         ))}</tbody></table>)}</div>
 
       <SpendingFormModal isOpen={showForm} onClose={()=>setShowForm(false)} onSubmit={handleSubmit} spendingData={editing} />
