@@ -27,9 +27,62 @@ function BankDetailsList(){
 
   const handleAdd=()=>{ setEditing(null); setShowForm(true);}
   const handleEdit=(r)=>{ setEditing(r); setShowForm(true);}
-  const handleView=async(r)=>{ setLoading(true); try{ const fresh = await bankDetailsAPI.getBankDetailBySeq(r.seq); setSelected(fresh || r);}catch(err){ console.error(err); setSelected(r);}finally{ setLoading(false); setShowView(true);} };
-  const handleDelete=async(seq)=>{ if(!window.confirm('Delete this record?')) return; try{ await bankDetailsAPI.deleteBankDetailBySeq(seq); setSuccess('Deleted'); fetchItems(); fetchSummary(); setTimeout(()=>setSuccess(''),3000);}catch(err){ console.error(err); setError('Delete failed'); }};
-  const handleSubmit=async(form,seq)=>{ try{ if(seq) await bankDetailsAPI.updateBankDetailBySeq(seq,form); else await bankDetailsAPI.createBankDetail(form); fetchItems(); fetchSummary(); setTimeout(()=>setSuccess('Saved'),2000);}catch(err){ console.error(err); setError('Save failed'); }};
+  const handleView = async (r) => {
+    setLoading(true);
+    try {
+      // prefer id-based lookup, fall back to seq
+      const fresh = r?.id ? await bankDetailsAPI.getBankDetailById(r.id) : (r?.seq ? await bankDetailsAPI.getBankDetailBySeq(r.seq) : null);
+      setSelected(fresh || r);
+    } catch (err) {
+      console.error(err);
+      setSelected(r);
+    } finally {
+      setLoading(false);
+      setShowView(true);
+    }
+  };
+
+  const handleDelete = async (idOrSeq) => {
+    if (!window.confirm('Delete this record?')) return;
+    try {
+      // prefer id-based delete, fall back to seq
+      try {
+        await bankDetailsAPI.deleteBankDetail(idOrSeq);
+      } catch (err) {
+        console.warn('delete by id failed, trying delete by seq', err);
+        await bankDetailsAPI.deleteBankDetailBySeq(idOrSeq);
+      }
+      setSuccess('Deleted');
+      fetchItems();
+      fetchSummary();
+      setTimeout(() => setSuccess(''), 3000);
+    } catch (err) {
+      console.error(err);
+      setError(typeof err === 'string' ? err : (err?.message || 'Delete failed'));
+    }
+  };
+
+  const handleSubmit = async (form, idOrSeq) => {
+    try {
+      if (idOrSeq) {
+        // prefer id-based update, fall back to seq
+        try {
+          await bankDetailsAPI.updateBankDetail(idOrSeq, form);
+        } catch (err) {
+          console.warn('update by id failed, trying update by seq', err);
+          await bankDetailsAPI.updateBankDetailBySeq(idOrSeq, form);
+        }
+      } else {
+        await bankDetailsAPI.createBankDetail(form);
+      }
+      fetchItems();
+      fetchSummary();
+      setTimeout(() => setSuccess('Saved'), 2000);
+    } catch (err) {
+      console.error(err);
+      setError(typeof err === 'string' ? err : (err?.message || 'Save failed'));
+    }
+  };
 
   const filtered = items.filter(i=> ( !search || (i.holderName && i.holderName.toLowerCase().includes(search.toLowerCase())) || (i.seq && `${i.seq}`.includes(search)) ));
 
@@ -54,7 +107,7 @@ function BankDetailsList(){
       <div className="table-wrap">{loading? <div className="loading">Loading...</div> : (
         <table className="bank-table"><thead><tr><th>Seq</th><th>Holder</th><th>Bank</th><th>Last4Acc</th><th>Credited</th><th>Deposited</th><th>Balance</th><th>Actions</th></tr></thead>
         <tbody>{filtered.map(r=> (
-          <tr key={r.seq || r.id}><td>{r.seq || r.id}</td><td>{r.holderName}</td><td>{r.bankName}</td><td>{r.last4Acc}</td><td>{fmt(r.amtCredited)}</td><td>{fmt(r.amtDeposited)}</td><td>{fmt(r.accountBal)}</td><td className="actions"><button className="act view" onClick={()=>handleView(r)}>👁️ View</button><button className="act edit" onClick={()=>handleEdit(r)}>✏️ Edit</button><button className="act del" onClick={()=>handleDelete(r.seq || r.id)}>🗑️ Delete</button></td></tr>
+          <tr key={r.id || r.seq}><td>{r.id || r.seq}</td><td>{r.holderName}</td><td>{r.bankName}</td><td>{r.last4Acc}</td><td>{fmt(r.amtCredited)}</td><td>{fmt(r.amtDeposited)}</td><td>{fmt(r.accountBal)}</td><td className="actions"><button className="act view" onClick={()=>handleView(r)}>👁️ View</button><button className="act edit" onClick={()=>handleEdit(r)}>✏️ Edit</button><button className="act del" onClick={()=>handleDelete(r.id || r.seq)}>🗑️ Delete</button></td></tr>
         ))}</tbody></table>)}</div>
 
       <BankDetailsFormModal isOpen={showForm} onClose={()=>setShowForm(false)} onSubmit={handleSubmit} bankData={editing} />

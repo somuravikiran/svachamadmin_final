@@ -45,7 +45,7 @@ function BankDetailsFormModal({ isOpen, onClose, onSubmit, bankData = null }){
         amtCredited: parseFloat(form.amtCredited)||0,
         amtDeposited: parseFloat(form.amtDeposited)||0,
         notes: form.notes
-      }, bankData?.seq);
+      }, bankData?.id || bankData?.seq || bankData?._id);
       onClose();
     }catch(err){ console.error(err); }
     finally{ setLoading(false); }

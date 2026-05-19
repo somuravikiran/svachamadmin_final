@@ -48,7 +48,7 @@ function StockItemFormModal({ isOpen, onClose, onSubmit, stockItemData = null })
         usedStock: parseInt(form.usedStock)||0,
         status: form.status,
         notes: form.notes
-      }, stockItemData?.seq);
+      }, stockItemData?.id || stockItemData?.seq || stockItemData?._id);
       onClose();
     }catch(err){ console.error(err); }
     finally{ setLoading(false); }
