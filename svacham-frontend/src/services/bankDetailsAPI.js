@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:8095/api/bankdetails';
+const API_BASE_URL = 'https://svachamadmin-backend.onrender.com/api/bankdetails';
 
 const bankDetailsAPI = {
   createBankDetail: async (data) => {

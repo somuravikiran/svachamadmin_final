@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:8095/api/clients';
+const API_BASE_URL = 'https://svachamadmin-backend.onrender.com/api/clients';
 
 const clientAPI = {
   // Create client

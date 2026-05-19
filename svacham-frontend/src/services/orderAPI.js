@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:8095/api/orders';
+const API_BASE_URL = 'https://svachamadmin-backend.onrender.com/api/orders';
 
 const orderAPI = {
   createOrder: async (data) => {
