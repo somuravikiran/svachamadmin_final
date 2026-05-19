@@ -28,9 +28,61 @@ function SpendingList(){
 
   const handleAdd=()=>{ setEditing(null); setShowForm(true);}
   const handleEdit=(r)=>{ setEditing(r); setShowForm(true);}
-  const handleView=async(r)=>{ setLoading(true); try{ const fresh = await spendingAPI.getSpendingBySeq(r.seq); setSelected(fresh || r);}catch(err){ console.error(err); setSelected(r);}finally{ setLoading(false); setShowView(true);} };
-  const handleDelete=async(seq)=>{ if(!window.confirm('Delete this record?')) return; try{ await spendingAPI.deleteSpendingBySeq(seq); setSuccess('Deleted'); fetchItems(); fetchSummary(); setTimeout(()=>setSuccess(''),3000);}catch(err){ console.error(err); setError('Delete failed'); }};
-  const handleSubmit=async(form,seq)=>{ try{ if(seq) await spendingAPI.updateSpendingBySeq(seq,form); else await spendingAPI.createSpending(form); fetchItems(); fetchSummary(); setTimeout(()=>setSuccess('Saved'),2000);}catch(err){ console.error(err); setError('Save failed'); }};
+  const handleView = async (r) => {
+    setLoading(true);
+    try {
+      const fresh = r?.seq ? await spendingAPI.getSpendingBySeq(r.seq) : (r?.id ? await spendingAPI.getSpendingById(r.id) : null);
+      setSelected(fresh || r);
+    } catch (err) {
+      console.error(err);
+      setSelected(r);
+    } finally {
+      setLoading(false);
+      setShowView(true);
+    }
+  };
+
+  const handleDelete = async (seqOrId) => {
+    if (!window.confirm('Delete this record?')) return;
+    try {
+      // try seq endpoint first, fall back to id endpoint
+      try {
+        await spendingAPI.deleteSpendingBySeq(seqOrId);
+      } catch (err) {
+        console.warn('delete by seq failed, trying delete by id', err);
+        await spendingAPI.deleteSpending(seqOrId);
+      }
+      setSuccess('Deleted');
+      fetchItems();
+      fetchSummary();
+      setTimeout(() => setSuccess(''), 3000);
+    } catch (err) {
+      console.error(err);
+      setError(typeof err === 'string' ? err : (err?.message || 'Delete failed'));
+    }
+  };
+
+  const handleSubmit = async (form, seqOrId) => {
+    try {
+      if (seqOrId) {
+        // try updating by seq first, then by id
+        try {
+          await spendingAPI.updateSpendingBySeq(seqOrId, form);
+        } catch (err) {
+          console.warn('update by seq failed, trying update by id', err);
+          await spendingAPI.updateSpending(seqOrId, form);
+        }
+      } else {
+        await spendingAPI.createSpending(form);
+      }
+      fetchItems();
+      fetchSummary();
+      setTimeout(() => setSuccess('Saved'), 2000);
+    } catch (err) {
+      console.error(err);
+      setError(typeof err === 'string' ? err : (err?.message || 'Save failed'));
+    }
+  };
 
   const handleSort=async(by)=>{
     setLoading(true); setError('');
