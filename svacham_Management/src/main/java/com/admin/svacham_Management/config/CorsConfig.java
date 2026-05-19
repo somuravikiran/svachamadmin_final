@@ -28,7 +28,9 @@ public class CorsConfig {
                 "http://localhost:5173", // Vite / pnpm dev server default
                 "http://127.0.0.1:5173",
                 "http://localhost:5174",
-                "http://127.0.0.1:5174"
+                "http://127.0.0.1:5174",
+                // production frontend hosted on Render
+                "https://svachamadmin-final.onrender.com"
         ));
 
         // allow all headers and methods typically used by REST clients (convenient for local dev)
