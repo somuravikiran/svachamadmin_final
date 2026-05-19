@@ -1,0 +1,16 @@
+# Ignore build output and IDE files
+target/
+.idea/
+.vscode/
+*.iml
+.git/
+.gitignore
+.DS_Store
+
+# Node and other artifacts
+node_modules/
+
+# OS files
+Thumbs.db
+desktop.ini
+
