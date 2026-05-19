@@ -1,0 +1,15 @@
+/* Bank Details View Modal - blue theme */
+.sv-overlay{ position:fixed; inset:0; background:rgba(10,15,30,0.45); display:flex; align-items:center; justify-content:center; z-index:1000; }
+.sv-content{ width:min(900px,95%); max-height:90vh; overflow:auto; background:linear-gradient(180deg,#ffffff,#fbfdff); border-radius:12px; box-shadow:0 12px 40px rgba(2,6,23,0.35); padding:1rem; }
+.sv-header{ display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(102,126,234,0.08); padding-bottom:0.5rem; margin-bottom:0.5rem; }
+.sv-header h2{ margin:0; color:#0f172a; }
+.sv-close{ background:transparent; border:none; font-size:1.25rem; cursor:pointer; color:#374151; }
+.sv-body{ padding:0.5rem 0; }
+.section{ margin-bottom:1rem; }
+.section h3{ margin:0 0 0.5rem 0; color:#111827; }
+.section p{ margin:0; color:#374151; }
+.grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:0.5rem; }
+.sv-footer{ display:flex; justify-content:flex-end; gap:0.5rem; padding-top:0.5rem; border-top:1px solid #eef2ff; margin-top:0.5rem; }
+.btn-close{ background:linear-gradient(135deg,#f3f4f6,#e6eefc); border:none; padding:0.5rem 0.9rem; border-radius:8px; cursor:pointer; color:#0f172a; }
+@media(max-width:600px){ .grid{ grid-template-columns:1fr 1fr; } .sv-content{ padding:0.75rem; } }
+

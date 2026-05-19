@@ -1,0 +1,100 @@
+import axios from 'axios';
+
+const API_BASE_URL = 'http://localhost:8095/api/stocks';
+
+const stockAPI = {
+  createStock: async (data) => {
+    try {
+      const res = await axios.post(API_BASE_URL, data);
+      return res.data;
+    } catch (err) {
+      throw err.response?.data || err.message;
+    }
+  },
+
+  getAllStocks: async () => {
+    try {
+      const res = await axios.get(API_BASE_URL);
+      return res.data;
+    } catch (err) {
+      throw err.response?.data || err.message;
+    }
+  },
+
+  getStockById: async (id) => {
+    try {
+      const res = await axios.get(`${API_BASE_URL}/${id}`);
+      return res.data;
+    } catch (err) {
+      throw err.response?.data || err.message;
+    }
+  },
+
+  // seq-based endpoints
+  getStockBySeq: async (seq) => {
+    try {
+      const res = await axios.get(`${API_BASE_URL}/seq/${seq}`);
+      return res.data;
+    } catch (err) {
+      throw err.response?.data || err.message;
+    }
+  },
+
+  updateStock: async (id, data) => {
+    try {
+      const res = await axios.put(`${API_BASE_URL}/${id}`, data);
+      return res.data;
+    } catch (err) {
+      throw err.response?.data || err.message;
+    }
+  },
+
+  updateStockBySeq: async (seq, data) => {
+    try {
+      const res = await axios.put(`${API_BASE_URL}/seq/${seq}`, data);
+      return res.data;
+    } catch (err) {
+      throw err.response?.data || err.message;
+    }
+  },
+
+  deleteStock: async (id) => {
+    try {
+      const res = await axios.delete(`${API_BASE_URL}/${id}`);
+      return res.data;
+    } catch (err) {
+      throw err.response?.data || err.message;
+    }
+  },
+
+  deleteStockBySeq: async (seq) => {
+    try {
+      const res = await axios.delete(`${API_BASE_URL}/seq/${seq}`);
+      return res.data;
+    } catch (err) {
+      throw err.response?.data || err.message;
+    }
+  },
+
+  getSummary: async () => {
+    try {
+      const res = await axios.get(`${API_BASE_URL}/summary`);
+      return res.data;
+    } catch (err) {
+      throw err.response?.data || err.message;
+    }
+  },
+
+  getSorted: async (by) => {
+    try {
+      const url = by ? `${API_BASE_URL}/sorted?by=${encodeURIComponent(by)}` : `${API_BASE_URL}/sorted`;
+      const res = await axios.get(url);
+      return res.data;
+    } catch (err) {
+      throw err.response?.data || err.message;
+    }
+  }
+};
+
+export default stockAPI;
+

@@ -1,0 +1,72 @@
+import axios from 'axios';
+
+const API_BASE_URL = 'http://localhost:8095/api/bankdetails';
+
+const bankDetailsAPI = {
+  createBankDetail: async (data) => {
+    try {
+      const res = await axios.post(API_BASE_URL, data);
+      return res.data;
+    } catch (err) {
+      throw err.response?.data || err.message;
+    }
+  },
+
+  getAllBankDetails: async () => {
+    try {
+      const res = await axios.get(API_BASE_URL);
+      return res.data;
+    } catch (err) {
+      throw err.response?.data || err.message;
+    }
+  },
+
+  getBankDetailBySeq: async (seq) => {
+    try {
+      const res = await axios.get(`${API_BASE_URL}/seq/${seq}`);
+      return res.data;
+    } catch (err) {
+      throw err.response?.data || err.message;
+    }
+  },
+
+  updateBankDetailBySeq: async (seq, data) => {
+    try {
+      const res = await axios.put(`${API_BASE_URL}/seq/${seq}`, data);
+      return res.data;
+    } catch (err) {
+      throw err.response?.data || err.message;
+    }
+  },
+
+  deleteBankDetailBySeq: async (seq) => {
+    try {
+      const res = await axios.delete(`${API_BASE_URL}/seq/${seq}`);
+      return res.data;
+    } catch (err) {
+      throw err.response?.data || err.message;
+    }
+  },
+
+  getSummary: async () => {
+    try {
+      const res = await axios.get(`${API_BASE_URL}/summary`);
+      return res.data;
+    } catch (err) {
+      throw err.response?.data || err.message;
+    }
+  },
+
+  getSorted: async (by) => {
+    try {
+      const url = by ? `${API_BASE_URL}/sorted?by=${encodeURIComponent(by)}` : `${API_BASE_URL}/sorted`;
+      const res = await axios.get(url);
+      return res.data;
+    } catch (err) {
+      throw err.response?.data || err.message;
+    }
+  }
+};
+
+export default bankDetailsAPI;
+

@@ -1,0 +1,44 @@
+/* Gst Bill List Styles */
+.gst-container {
+  padding: 2rem;
+  background: linear-gradient(135deg, #f5f7fa 0%, #eef2f8 100%);
+}
+
+.gst-header {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:1.25rem;
+}
+
+.btn-add {
+  background: linear-gradient(135deg,#667eea 0%,#764ba2 100%);
+  color:white; padding:0.75rem 1rem; border-radius:10px; border:none; cursor:pointer; font-weight:600;
+}
+
+.gst-summary{ display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:1rem; margin-bottom:1rem; }
+.gst-summary .card{ background:white; padding:1rem; border-radius:8px; box-shadow:0 4px 12px rgba(0,0,0,0.06); }
+.gst-summary .card h4{ margin:0; font-size:0.9rem; color:#666; }
+.gst-summary .card p{ margin:0.5rem 0 0; font-size:1.3rem; font-weight:700; }
+
+.filters{ display:flex; gap:0.75rem; margin:1rem 0 1.25rem; }
+.filters input, .filters select{ padding:0.6rem 0.8rem; border-radius:8px; border:1px solid #e6e9ef; }
+
+.table-wrap{ background:white; border-radius:10px; box-shadow:0 6px 24px rgba(0,0,0,0.06); overflow:auto; }
+.gst-table{ width:100%; border-collapse:collapse; min-width:900px; }
+.gst-table th{ background:linear-gradient(135deg,#667eea,#764ba2); color:white; padding:0.85rem; text-align:left; font-weight:700; }
+.gst-table td{ padding:0.85rem; border-bottom:1px solid #f0f2f6; }
+
+.status{ padding:0.3rem 0.6rem; border-radius:6px; font-weight:600; text-transform:capitalize; }
+.status.paid{ background:rgba(16,185,129,0.1); color:#10b981; }
+.status.pending{ background:rgba(255,193,7,0.08); color:#d97706; }
+.status.partial{ background:rgba(255,107,107,0.08); color:#ff6b6b; }
+
+.actions{ display:flex; gap:0.5rem; }
+.act{ padding:0.4rem 0.7rem; border-radius:8px; border:none; cursor:pointer; font-weight:600; }
+.act.view{ background:rgba(102,126,234,0.08); color:#667eea; }
+.act.edit{ background:rgba(59,168,252,0.08); color:#3ba8fc; }
+.act.del{ background:rgba(255,107,107,0.08); color:#ff6b6b; }
+
+@media(max-width:768px){ .filters{ flex-direction:column; } .gst-summary{ grid-template-columns:repeat(2,1fr);} }
+

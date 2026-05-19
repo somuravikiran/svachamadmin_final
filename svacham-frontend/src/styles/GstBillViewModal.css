@@ -1,0 +1,16 @@
+/* Gst Bill View Modal Styles */
+.view-overlay{ position:fixed; inset:0; background:rgba(0,0,0,0.6); display:flex; align-items:center; justify-content:center; z-index:1000; }
+.view-content{ width:95%; max-width:720px; background:white; border-radius:12px; overflow:auto; }
+.view-header{ padding:1rem; display:flex; justify-content:space-between; align-items:center; background:linear-gradient(135deg,#667eea,#764ba2); color:white; border-radius:12px 12px 0 0; }
+.view-close{ background:transparent; border:none; color:white; font-size:1.25rem; cursor:pointer; }
+.view-body{ padding:1rem; }
+.section{ margin-bottom:1rem; }
+.section h3{ margin:0 0 0.75rem 0; color:#333; }
+.grid{ display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; }
+.grid .full{ grid-column:1 / -1; }
+.grid label{ font-weight:600; color:#666; font-size:0.85rem; }
+.grid p{ margin:0.25rem 0 0; font-size:1rem; color:#333; }
+.view-footer{ padding:1rem; display:flex; justify-content:center; }
+.btn-close{ background:linear-gradient(135deg,#667eea,#764ba2); color:white; border:none; padding:0.6rem 1.25rem; border-radius:8px; }
+@media(max-width:768px){ .grid{ grid-template-columns:1fr; } }
+
