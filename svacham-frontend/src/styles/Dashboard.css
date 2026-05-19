@@ -1,0 +1,18 @@
+/* Dashboard styles */
+.dashboard-root{
+  padding:2rem;
+  background: linear-gradient(180deg,#f8fafc 0%, #f1f5f9 100%);
+}
+.dashboard-root h1{ margin:0 0 1rem 0; color:#0f172a; font-size:1.6rem; }
+.dashboard-actions{ display:flex; justify-content:flex-end; margin-bottom:1rem; }
+.dashboard-grid{ display:grid; grid-template-columns: repeat(auto-fit,minmax(220px,1fr)); gap:1rem; }
+.dash-card{ background:white; border-radius:12px; padding:1rem; box-shadow:0 10px 30px rgba(2,6,23,0.06); cursor:pointer; transition:all 0.22s ease; border:1px solid rgba(99,102,241,0.06); }
+.dash-card:hover{ transform:translateY(-6px); box-shadow:0 18px 40px rgba(2,6,23,0.09); }
+.card-top{ display:flex; align-items:center; gap:0.75rem; margin-bottom:0.6rem; }
+.card-icon{ width:44px; height:44px; border-radius:10px; background:linear-gradient(135deg,#667eea,#764ba2); display:flex; align-items:center; justify-content:center; color:white; font-size:1.2rem; box-shadow:0 6px 18px rgba(102,126,234,0.12); }
+.card-title{ font-weight:700; color:#111827; font-size:0.95rem; }
+.card-value{ font-size:1.5rem; font-weight:800; color:#0f172a; margin-bottom:0.25rem; }
+.card-sub{ color:#6b7280; font-size:0.85rem; }
+.loading{ padding:1rem; }
+@media(max-width:600px){ .dashboard-grid{ grid-template-columns:1fr; } .card-icon{ width:40px; height:40px; } }
+

@@ -2,6 +2,7 @@ import '../styles/Sidebar.css';
 
 function Sidebar({ isOpen, onClose, onNavigate }) {
   const menuItems = [
+    { id: 0, label: 'Dashboard', icon: '🏠', page: 'dashboard' },
     { id: 1, label: 'Client', icon: '👥', page: 'clients' },
     { id: 2, label: 'GST Bill', icon: '🧾', page: 'gstbill' },
     { id: 3, label: 'Order', icon: '📦', page: 'order' },
